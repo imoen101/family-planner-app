@@ -10,7 +10,7 @@ import {
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const TIMES = ["Morning", "Afternoon", "Evening"];
-const STATES = ["Flexible", "Imogen on duty", "Dodo on duty"];
+const STATES = ["Flexible", "Imogen", "Dodo"];
 const SLOT_TYPES = ["Swappable", "Fixed"];
 const STORAGE_KEY = "family-shift-planner-v2";
 
@@ -49,8 +49,8 @@ function cloneSlots(slots) {
 }
 
 function getDutyOwner(state) {
-  if (state === "Imogen on duty") return "Imogen";
-  if (state === "Dodo on duty") return "Dodo";
+  if (state === "Imogen") return "Imogen";
+  if (state === "Dodo") return "Dodo";
   return null;
 }
 
@@ -99,10 +99,10 @@ function nextState(current) {
 }
 
 function getSlotColors(state) {
-  if (state === "Imogen on duty") {
+  if (state === "Imogen") {
     return { bg: "#dbeafe", border: "#93c5fd", text: "#0f172a" };
   }
-  if (state === "Dodo on duty") {
+  if (state === "Dodo") {
     return { bg: "#fde68a", border: "#f59e0b", text: "#0f172a" };
   }
   return { bg: "#dcfce7", border: "#86efac", text: "#14532d" };
@@ -211,8 +211,8 @@ export default function App() {
     let fixed = 0;
 
     Object.values(data.slots).forEach((slot) => {
-      if (slot.state === "Imogen on duty") imogenDuty += 1;
-      if (slot.state === "Dodo on duty") dodoDuty += 1;
+      if (slot.state === "Imogen") imogenDuty += 1;
+      if (slot.state === "Dodo") dodoDuty += 1;
       if (slot.state === "Flexible") flexible += 1;
       if (slot.slotType === "Fixed") fixed += 1;
     });
@@ -445,11 +445,11 @@ export default function App() {
             }}
           >
             <div style={{ ...miniCardStyle(), padding: 12 }}>
-              <div style={{ fontSize: 13, color: "#64748b" }}>Imogen on duty</div>
+              <div style={{ fontSize: 13, color: "#64748b" }}>Imogen</div>
               <div style={{ fontSize: 26, fontWeight: 700, color: "#0369a1", marginTop: 4 }}>{summary.imogenDuty}</div>
             </div>
             <div style={{ ...miniCardStyle(), padding: 12 }}>
-              <div style={{ fontSize: 13, color: "#64748b" }}>Dodo on duty</div>
+              <div style={{ fontSize: 13, color: "#64748b" }}>Dodo</div>
               <div style={{ fontSize: 26, fontWeight: 700, color: "#b45309", marginTop: 4 }}>{summary.dodoDuty}</div>
             </div>
             <div style={{ ...miniCardStyle(), padding: 12 }}>
