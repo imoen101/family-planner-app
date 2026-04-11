@@ -37,8 +37,6 @@ function makeInitialSlots() {
 
 function normalizeStateValue(state) {
   if (!state) return "Flexible";
-  if (state === "Imogen on duty") return "Imogen";
-  if (state === "Dodo on duty") return "Dodo";
   if (state === "Imogen") return "Imogen";
   if (state === "Dodo") return "Dodo";
   if (state === "Flexible") return "Flexible";
