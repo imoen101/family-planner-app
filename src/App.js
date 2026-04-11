@@ -35,6 +35,28 @@ function makeInitialSlots() {
   return slots;
 }
 
+function normalizeStateValue(state) {
+  if (!state) return "Flexible";
+  if (state === "Imogen on duty") return "Imogen";
+  if (state === "Dodo on duty") return "Dodo";
+  if (state === "Imogen") return "Imogen";
+  if (state === "Dodo") return "Dodo";
+  if (state === "Flexible") return "Flexible";
+  return "Flexible";
+}
+
+function normalizeSlots(slots) {
+  const out = {};
+  for (const key of Object.keys(slots || {})) {
+    const s = slots[key];
+    out[key] = {
+      ...s,
+      state: normalizeStateValue(s.state),
+    };
+  }
+  return out;
+}
+
 function makeInitialData() {
   return {
     weekLabel: "This Week",
@@ -42,6 +64,7 @@ function makeInitialData() {
     slots: makeInitialSlots(),
     selectedKey: "Mon-Morning",
   };
+};
 }
 
 function cloneSlots(slots) {
@@ -192,7 +215,13 @@ export default function App() {
     if (!raw) return;
     try {
       const parsed = JSON.parse(raw);
-      if (parsed?.slots && parsed?.selectedKey) setData(parsed);
+      if (parsed?.slots && parsed?.selectedKey) {
+        setData({
+          ...parsed,
+          slots: normalizeSlots(parsed.slots),
+          baselineSlots: parsed.baselineSlots ? normalizeSlots(parsed.baselineSlots) : null,
+        });
+      }
     } catch (e) {
       console.error(e);
     }
@@ -282,6 +311,21 @@ export default function App() {
       try {
         const parsed = JSON.parse(String(e.target?.result || "{}"));
         if (parsed?.slots && parsed?.selectedKey) {
+          setData({
+            ...parsed,
+            slots: normalizeSlots(parsed.slots),
+            baselineSlots: parsed.baselineSlots ? normalizeSlots(parsed.baselineSlots) : null,
+          });
+        } else {
+          alert("That file could not be imported.");
+        }
+      } catch {
+        alert("That file could not be imported.");
+      }
+    };
+    reader.readAsText(file);
+  }"));
+        if (parsed?.slots && parsed?.selectedKey) {
           setData(parsed);
         } else {
           alert("That file could not be imported.");
@@ -328,9 +372,22 @@ export default function App() {
     try {
       const sharedData = await pullSharedPlanner();
       if (sharedData?.slots && sharedData?.selectedKey) {
-        setData(sharedData);
+        setData({
+          ...sharedData,
+          slots: normalizeSlots(sharedData.slots),
+          baselineSlots: sharedData.baselineSlots ? normalizeSlots(sharedData.baselineSlots) : null,
+        });
         setSyncMessage("Latest shared planner loaded.");
       } else {
+        setSyncMessage("No shared planner found yet. Push one first.");
+      }
+    } catch (error) {
+      setSyncMessage("Could not pull shared planner yet.");
+      console.error(error);
+    } finally {
+      setSyncBusy(false);
+    }
+  } else {
         setSyncMessage("No shared planner found yet. Push one first.");
       }
     } catch (error) {
