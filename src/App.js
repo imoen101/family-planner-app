@@ -10,7 +10,7 @@ import {
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const TIMES = ["Morning", "Afternoon", "Evening"];
-const STATES = ["Flexible", "Imogen on duty", "Dodo on duty"];
+const STATES = ["Flexible", "Imogen", "Dodo"];
 const SLOT_TYPES = ["Swappable", "Fixed"];
 const STORAGE_KEY = "family-shift-planner-v2";
 
@@ -49,8 +49,8 @@ function cloneSlots(slots) {
 }
 
 function getDutyOwner(state) {
-  if (state === "Imogen on duty") return "Imogen";
-  if (state === "Dodo on duty") return "Dodo";
+  if (state === "Imogen") return "Imogen";
+  if (state === "Dodo") return "Dodo";
   return null;
 }
 
@@ -99,10 +99,10 @@ function nextState(current) {
 }
 
 function getSlotColors(state) {
-  if (state === "Imogen on duty") {
+  if (state === "Imogen") {
     return { bg: "#dbeafe", border: "#93c5fd", text: "#0f172a" };
   }
-  if (state === "Dodo on duty") {
+  if (state === "Dodo") {
     return { bg: "#fde68a", border: "#f59e0b", text: "#0f172a" };
   }
   return { bg: "#dcfce7", border: "#86efac", text: "#14532d" };
